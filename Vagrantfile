@@ -66,63 +66,26 @@ Vagrant.configure(2) do |config|
     end
   end
 
-  # k8s-node-01
-  config.vm.define 'k8s-node-01' do |node|
-    node.vm.provider 'virtualbox' do |vb|
-      vb.cpus = 1
-      vb.memory = 1024
-      vb.gui = false
-    end
-    node.vm.hostname = 'k8s-node-01'
-    node.vm.box = 'ubuntu/cosmic64'
-    node.vm.network 'private_network',
-                    ip: '172.17.0.21', netmask: '255.255.255.0', auto_config: true,
-                    virtualbox__intnet: 'k8s-cluster'
-    node.vm.provision :ansible_local do |ansible|
-      ansible.compatibility_mode = '2.0'
-      ansible.playbook = '/home/vagrant/ansible/all.yml'
-      ansible.inventory_path = '/home/vagrant/ansible/inventories/nodes'
-      ansible.limit = 'nodes'
-    end
-  end
-
-  # k8s-node-02
-  config.vm.define 'k8s-node-02' do |node|
-    node.vm.provider 'virtualbox' do |vb|
-      vb.cpus = 1
-      vb.memory = 1024
-      vb.gui = false
-    end
-    node.vm.hostname = 'k8s-node-02'
-    node.vm.box = 'ubuntu/cosmic64'
-    node.vm.network 'private_network',
-                    ip: '172.17.0.22', netmask: '255.255.255.0', auto_config: true,
-                    virtualbox__intnet: 'k8s-cluster'
-    node.vm.provision :ansible_local do |ansible|
-      ansible.compatibility_mode = '2.0'
-      ansible.playbook = '/home/vagrant/ansible/all.yml'
-      ansible.inventory_path = '/home/vagrant/ansible/inventories/nodes'
-      ansible.limit = 'nodes'
-    end
-  end
-
-  # k8s-node-03
-  config.vm.define 'k8s-node-03' do |node|
-    node.vm.provider 'virtualbox' do |vb|
-      vb.cpus = 1
-      vb.memory = 1024
-      vb.gui = false
-    end
-    node.vm.hostname = 'k8s-node-03'
-    node.vm.box = 'ubuntu/cosmic64'
-    node.vm.network 'private_network',
-                    ip: '172.17.0.23', netmask: '255.255.255.0', auto_config: true,
-                    virtualbox__intnet: 'k8s-cluster'
-    node.vm.provision :ansible_local do |ansible|
-      ansible.compatibility_mode = '2.0'
-      ansible.playbook = '/home/vagrant/ansible/all.yml'
-      ansible.inventory_path = '/home/vagrant/ansible/inventories/nodes'
-      ansible.limit = 'nodes'
+  # k8s-nodes
+  (1..3).each do |i|
+    hostname = 'k8s-node-%s' % (i.to_s.rjust(2,'0'))
+    config.vm.define hostname do |node|
+      node.vm.provider 'virtualbox' do |vb|
+        vb.cpus = 1
+        vb.memory = 1024
+        vb.gui = false
+      end
+      node.vm.hostname = hostname
+      node.vm.box = 'ubuntu/cosmic64'
+      node.vm.network 'private_network',
+                      ip: '172.17.0.%s' % ( i + 20 ), netmask: '255.255.255.0', auto_config: true,
+                      virtualbox__intnet: 'k8s-cluster'
+      node.vm.provision :ansible_local do |ansible|
+        ansible.compatibility_mode = '2.0'
+        ansible.playbook = '/home/vagrant/ansible/all.yml'
+        ansible.inventory_path = '/home/vagrant/ansible/inventories/nodes'
+        ansible.limit = 'nodes'
+      end
     end
   end
 end
