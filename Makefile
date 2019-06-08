@@ -84,7 +84,7 @@ k8s-master-clean:
 .PHONY: k8s-nodes-up
 k8s-nodes-up: k8s-nodes.ssh.config
 k8s-nodes.ssh.config: Vagrantfile
-	vagrant up /k8s-node/
+	vagrant up --parallel /k8s-node/
 	vagrant ssh-config /k8s-node/ > k8s-nodes.ssh.config
 
 .PHONY: k8s-nodes-provision
