@@ -56,6 +56,16 @@ client-clean:
 	vagrant destroy -f client-01
 	rm -f client.ssh.config
 
+# k8s-cluster
+.PHONY: k8s-cluster-up
+k8s-cluster-up: k8s-master-up k8s-nodes-up
+.PHONY: k8s-cluster-provision
+k8s-cluster-provision: k8s-master-provision k8s-nodes-provision
+.PHONY: k8s-cluster-down
+k8s-cluster-down: k8s-master-down k8s-nodes-down
+.PHONY: k8s-cluster-clean
+k8s-cluster-clean: k8s-master-clean k8s-nodes-clean
+
 # k8s-master-01
 .PHONY: k8s-master-up
 k8s-master-up: k8s-master.ssh.config

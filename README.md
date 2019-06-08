@@ -20,6 +20,17 @@
 
 # how to use with vagrant
 
+## k8s-cluster
+
+- `vagrant up`
+    - `make k8s-cluster-up`
+- `vagrant provision`
+    - `make k8s-cluster-provision`
+- `vagrant halt`
+    - `make k8s-cluster-down`
+- `vagrant destroy`
+    - `make k8s-cluster-clean`
+
 ## vagrant up
 
 - all
