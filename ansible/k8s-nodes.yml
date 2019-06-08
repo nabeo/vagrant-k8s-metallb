@@ -1,0 +1,6 @@
+---
+- hosts: nodes
+  become: yes
+  user: vagrant
+  roles:
+    - k8s

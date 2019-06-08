@@ -1,0 +1,17 @@
+---
+- name: install packages
+  apt:
+    name: ['curl']
+    state: present
+    update_cache: yes
+    install_recommends: no
+    force_apt_get: yes
+
+- name: add static-route file
+  copy:
+    src: ../files/99-static-route.yaml
+    dest: /etc/netplan/99-static-route.yaml
+    mode: 0644
+    owner: root
+    group: root
+  notify: netplan apply

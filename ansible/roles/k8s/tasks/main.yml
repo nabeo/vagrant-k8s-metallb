@@ -1,0 +1,61 @@
+---
+- name: register codename
+  shell: lsb_release -cs
+  register: codename
+
+- name: create docker group
+  group:
+    name: docker
+    state: present
+    system: yes
+
+- name: vagrant user add to docker group
+  user:
+    name: vagrant
+    groups: docker, vagrant
+
+- name: install gpg key for docker-ce
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+
+- name: install apt repository for docker-ce
+  apt_repository:
+    repo: "deb https://download.docker.com/linux/ubuntu {{ codename.stdout }} stable"
+    filename: docker-ce
+    state: present
+
+- name: install docker-ce
+  apt:
+    name: docker-ce
+    state: present
+    force_apt_get: yes
+    update_cache: yes
+    install_recommends: no
+
+- name: dockerd config
+  copy:
+    src: dockerd.daemon.json
+    dest: /etc/docker/daemon.json
+    owner: root
+    group: root
+    mode: '0644'
+  notify: restart docker.service
+
+- name: install gpg key for k8s
+  apt_key:
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+
+- name: install apt repository for k8s
+  apt_repository:
+    repo: "deb http://apt.kubernetes.io/ kubernetes-xenial main"
+    filename: k8s
+    state: present
+    validate_certs: no
+
+- name: install k8s packages
+  apt:
+    name: ['kubelet', 'kubeadm', 'kubectl']
+    state: present
+    force_apt_get: yes
+    update_cache: yes
+    install_recommends: no

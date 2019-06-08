@@ -1,0 +1,6 @@
+---
+- hosts: clients
+  become: yes
+  user: vagrant
+  roles:
+    - clients
