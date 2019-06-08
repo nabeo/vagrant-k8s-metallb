@@ -69,7 +69,7 @@ k8s-master-provision: k8s-master.ssh.config
 
 .PHONY: k8s-master-01-ssh
 k8s-master-01-ssh: k8s-master.ssh.config
-	ssh -F k8s-master-01.ssh.config k8s-master-01
+	ssh -F k8s-master.ssh.config k8s-master-01
 
 .PHONY: k8s-master-down
 k8s-master-down:
