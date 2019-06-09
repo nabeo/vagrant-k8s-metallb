@@ -32,15 +32,6 @@
     update_cache: yes
     install_recommends: no
 
-- name: dockerd config
-  copy:
-    src: dockerd.daemon.json
-    dest: /etc/docker/daemon.json
-    owner: root
-    group: root
-    mode: '0644'
-  notify: restart docker.service
-
 - name: install gpg key for k8s
   apt_key:
     url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
@@ -59,12 +50,3 @@
     force_apt_get: yes
     update_cache: yes
     install_recommends: no
-
-- name: /etc/default/kubelet
-  template:
-    src: kubelet.default.j2
-    dest: /etc/default/kubelet
-    owner: root
-    group: root
-    mode: '0755'
-  notify: daemon-reload and restart kubelet

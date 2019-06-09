@@ -1,7 +1,7 @@
 # Vagrant Network
 
 ```
-             client (172.17.1.0/24)
+             client (172.17.0.0/24)
 -------+--------------+------------
        |              |
    eth1|.1      enp0s8|.10
@@ -139,7 +139,47 @@ ansible
 │   └── nodes   # inventory file for k8s-nodes
 |
 └── roles       # role direcotry
-    ├── clients # role for client
-    ├── k8s     # role for k8s cluster
+    ├── clients    # role for client
+    ├── k8s        # role for k8s cluster
+    ├── k8s-node   # role for k8s worker nodes
+    ├── k8s-master # role for k8s master node
     └── role_template # role template
+```
+
+# join to k8s cluster
+
+- on k8s worker nodes
+
+```
+sudo $( tail -n 1 /home/vagrant/shared/k8s-init.txt )
+```
+
+or 
+
+```
+kubectl join 172.17.0.10:6443 --token <token> --discovery-token-ca-cert-hash $( tail -n 1 /home/vagrant/shared/k8s-init.txt | awk '{print $NF}' )
+```
+
+- create token at k8s master node
+```
+kubeadm token create --pront-join-command
+```
+
+- kubeadm join at k8s nodes
+
+- on k8s master nodes
+
+```
+kubectl label nodes <hostname> node-role.kubernetes.io/node=
+kubectl label nodes <hostname> type=worker
+```
+
+# remove from k8s cluster
+
+- on k8s master node
+
+```
+kubectl cordon <hostname>
+kubectl drain <hostname> --ignore-daemonsets
+kubectl delete nodes <hostname>
 ```

@@ -84,6 +84,7 @@ k8s-master-01-ssh: k8s-master.ssh.config
 .PHONY: k8s-master-down
 k8s-master-down:
 	vagrant halt k8s-master-01
+	rm -f k8s-master.ssh.config
 
 .PHONY: k8s-master-clean
 k8s-master-clean:

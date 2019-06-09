@@ -4,3 +4,4 @@
   user: vagrant
   roles:
     - k8s
+    - k8s-master

@@ -1,1 +1,101 @@
 ---
+- name: dockerd config
+  copy:
+    src: dockerd.daemon.json
+    dest: /etc/docker/daemon.json
+    owner: root
+    group: root
+    mode: '0644'
+  register: update_docker_daemon_config_for_k8s_master
+
+- name: restart docker.service
+  systemd:
+    daemon_reload: yes
+    state: restarted
+    name: docker.service
+  when: update_docker_daemon_config_for_k8s_master is changed
+
+- name: /etc/defaults/kubelet for k8s master node
+  template:
+    src: kubelet.default.j2
+    dest: /etc/default/kubelet
+    owner: root
+    group: root
+    mode: '0755'
+  register: update_kubelet_config_for_k8s_master
+
+- name: daemon-reaload and restart kubelet
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    name: kubelet.service
+  when: update_kubelet_config_for_k8s_master is changed
+
+- name: check /etc/kubernetes/manifests/kube-apiserver.yaml
+  stat:
+    path: /etc/kubernetes/manifests/kube-apiserver.yaml
+  register: etc_kubernetes_manifests_kube_apiserver_yaml
+
+- name: check /etc/kubernetes/manifests/kube-controller-manager.yaml
+  stat:
+    path: /etc/kubernetes/manifests/kube-controller-manager.yaml
+  register: etc_kubernetes_manifests_kube_controller_manager_yaml
+
+- name: check /etc/kubernetes/manifests/kube-scheduler.yaml
+  stat:
+    path: /etc/kubernetes/manifests/kube-scheduler.yaml
+  register: etc_kubernetes_manifests_kube_scheduler_yaml
+
+- name: check /etc/kubernetes/manifests/etcd.yaml
+  stat:
+    path: /etc/kubernetes/manifests/etcd.yaml
+  register: etc_kubernetes_manifests_etcd_yaml
+
+- name: kubeadm config images pull
+  command: kubeadm config images pull
+  when: 
+    - not etc_kubernetes_manifests_kube_apiserver_yaml.stat.exists
+    - not etc_kubernetes_manifests_kube_controller_manager_yaml.stat.exists
+    - not etc_kubernetes_manifests_kube_scheduler_yaml.stat.exists
+    - not etc_kubernetes_manifests_etcd_yaml.stat.exists
+
+- name: kubeadm init
+  command: kubeadm init --pod-network-cidr=10.244.0.0/16 --apiserver-advertise-address="{{ ansible_facts.enp0s8.ipv4.address }}" --service-cidr=10.32.0.0/24
+  register: k8s_init
+  when: 
+    - not etc_kubernetes_manifests_kube_apiserver_yaml.stat.exists
+    - not etc_kubernetes_manifests_kube_controller_manager_yaml.stat.exists
+    - not etc_kubernetes_manifests_kube_scheduler_yaml.stat.exists
+    - not etc_kubernetes_manifests_etcd_yaml.stat.exists
+
+- name: dump k8s-init.txt
+  shell: echo "{{ k8s_init.stdout }}" > /home/vagrant/shared/k8s-init.txt
+  when: k8s_init is changed
+
+- name: daemon-reload and restart kubelet.service
+  systemd:
+    name: kubelet.service
+    daemon_reload: yes
+    state: restarted
+  when: k8s_init is changed
+
+- name: create ~vagrant/.kube
+  file:
+    path: /home/vagrant/.kube
+    owner: vagrant
+    group: vagrant
+    mode: '0755'
+    state: directory
+
+- name: copy /etc/kubernetes/admin.conf /home/vagrant/.kube/config
+  command: cp -i /etc/kubernetes/admin.conf /home/vagrant/.kube/config
+
+- name: /home/vagrant/.kube/config
+  file:
+    path: /home/vagrant/.kube/config
+    owner: vagrant
+    group: vagrant
+    mode: '0644'
+
+- name: deploy flannel
+  command: kubectl --kubeconfig=/etc/kubernetes/admin.conf apply -f /home/vagrant/shared/k8s-configs/kube-flannel.yml

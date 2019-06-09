@@ -1,0 +1,32 @@
+---
+- name: dockerd config
+  copy:
+    src: dockerd.daemon.json
+    dest: /etc/docker/daemon.json
+    owner: root
+    group: root
+    mode: '0644'
+  register: update_docker_daemon_config_for_k8s_node
+
+- name: restart docker.service
+  systemd:
+    daemon_reload: yes
+    state: restarted
+    name: docker.service
+  when: update_docker_daemon_config_for_k8s_node is changed
+
+- name: /etc/default/kubelet
+  template:
+    src: kubelet.default.j2
+    dest: /etc/default/kubelet
+    owner: root
+    group: root
+    mode: '0755'
+  register: update_kubelet_config_for_k8s_node
+
+- name: daemon-reaload and restart kubelet
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    name: kubelet.service
+  when: update_kubelet_config_for_k8s_node is changed
