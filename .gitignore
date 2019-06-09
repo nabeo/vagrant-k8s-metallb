@@ -1,3 +1,4 @@
 *.ssh.config
 *.log
 .vagrant
+shared/k8s-init.txt
