@@ -3,3 +3,9 @@
   systemd:
     name: docker.service
     state: restarted
+
+- name: daemon-reload and restart kubelet
+  systemd:
+    name: kubelet.service
+    state: restarted
+    daemon_reload: yes

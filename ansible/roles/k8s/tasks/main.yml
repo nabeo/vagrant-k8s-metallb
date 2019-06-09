@@ -59,3 +59,12 @@
     force_apt_get: yes
     update_cache: yes
     install_recommends: no
+
+- name: /etc/default/kubelet
+  template:
+    src: kubelet.default.j2
+    dest: /etc/default/kubelet
+    owner: root
+    group: root
+    mode: '0755'
+  notify: daemon-reload and restart kubelet
