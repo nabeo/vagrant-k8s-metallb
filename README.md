@@ -19,6 +19,9 @@
 ```
 
 * docker0 : 172.17.255.0/24
+* k8s
+    * Flannel Pod Network CIDR :  10.244.0.0/16/16
+    * Service CIDR : 10.32.0.0/24
 
 # how to use with vagrant
 
