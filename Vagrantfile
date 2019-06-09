@@ -48,7 +48,7 @@ Vagrant.configure(2) do |config|
   # k8s-master-01
   config.vm.define 'k8s-master-01' do |node|
     node.vm.provider 'virtualbox' do |vb|
-      vb.cpus = 1
+      vb.cpus = 2
       vb.memory = 2048
       vb.gui = false
     end
@@ -71,7 +71,7 @@ Vagrant.configure(2) do |config|
     hostname = 'k8s-node-%s' % (i.to_s.rjust(2,'0'))
     config.vm.define hostname do |node|
       node.vm.provider 'virtualbox' do |vb|
-        vb.cpus = 1
+        vb.cpus = 2
         vb.memory = 1024
         vb.gui = false
       end
