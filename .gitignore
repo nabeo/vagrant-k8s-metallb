@@ -2,3 +2,4 @@
 *.log
 .vagrant
 shared/k8s-init.txt
+shared/admin.conf
