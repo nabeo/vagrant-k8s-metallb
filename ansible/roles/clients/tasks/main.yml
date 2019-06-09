@@ -14,4 +14,8 @@
     mode: 0644
     owner: root
     group: root
-  notify: netplan apply
+  register: add_static_route
+
+- name: netplan apply
+  command: netplan apply
+  when: add_static_route is changed
