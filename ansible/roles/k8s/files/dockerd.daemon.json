@@ -1,4 +1,10 @@
 {
+  "exec-opts": ["native.cgroupdriver=systemd"],
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "100m"
+  },
+  "storage-driver": "overlay2",
   "bip": "172.17.255.1/24",
   "fixed-cidr": "172.17.255.0/24"
 }
