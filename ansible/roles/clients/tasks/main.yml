@@ -14,8 +14,8 @@
     mode: 0644
     owner: root
     group: root
-  register: add_static_route
+  register: update_static_route_for_k8s_cluster_network
 
 - name: netplan apply
   command: netplan apply
-  when: add_static_route is changed
+  when: update_static_route_for_k8s_cluster_network is changed

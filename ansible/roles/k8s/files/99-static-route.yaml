@@ -1,0 +1,9 @@
+---
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    enp0s8:
+      routes:
+        - to: 172.17.1.0/24
+          via: 172.17.0.1

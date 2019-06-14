@@ -1,0 +1,10 @@
+---
+- name: setup ASN 64512
+  vyos_config:
+    lines:
+      - set protocols bgp 64512
+      - set protocols bgp 64512 network 172.17.0.0/24
+      - set protocols bgp 64512 neighbor 172.17.1.21 remote-as 64522
+      - set protocols bgp 64512 neighbor 172.17.1.22 remote-as 64522
+      - set protocols bgp 64512 neighbor 172.17.1.23 remote-as 64522
+      - set protocols bgp 64512 maximum-paths ibgp 2

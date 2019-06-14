@@ -43,6 +43,19 @@
     state: present
     validate_certs: no
 
+- name: add static-route file
+  copy:
+    src: ../files/99-static-route.yaml
+    dest: /etc/netplan/99-static-route.yaml
+    mode: 0644
+    owner: root
+    group: root
+  register: update_static_route_for_client_network
+
+- name: update static route
+  command: netplan apply
+  when: update_static_route_for_client_network is changed
+
 - name: install k8s packages
   apt:
     name: ['kubelet', 'kubeadm', 'kubectl']
@@ -50,3 +63,17 @@
     force_apt_get: yes
     update_cache: yes
     install_recommends: no
+
+- name: setup bash completion for kubectl
+  lineinfile:
+    path: /etc/profile.d/k8s.sh
+    line: 'source <( kubectl completion bash )'
+    state: present
+    create: yes
+
+- name: setup bash completion for kubeadm
+  lineinfile:
+    path: /etc/profile.d/k8s.sh
+    line: 'soruce <( kubectl completion bash )'
+    state: present
+    create: yes

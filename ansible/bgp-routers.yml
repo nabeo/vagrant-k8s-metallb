@@ -1,0 +1,7 @@
+---
+- hosts: routers
+  become: yes
+  user: vagrant
+  roles:
+    - bgp-router
+

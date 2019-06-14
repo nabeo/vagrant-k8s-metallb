@@ -100,7 +100,7 @@ k8s-nodes.ssh.config: Vagrantfile
 
 .PHONY: k8s-nodes-provision
 k8s-nodes-provision: k8s-nodes.ssh.config
-	vagrant provision --parallel /k8s-node/
+	vagrant up --parallel --provision /k8s-node/
 
 .PHONY: k8s-node-01-ssh
 k8s-node-01-ssh: k8s-nodes.ssh.config

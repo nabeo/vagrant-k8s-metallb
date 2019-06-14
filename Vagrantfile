@@ -22,6 +22,13 @@ Vagrant.configure(2) do |config|
     node.vm.network 'private_network',
                     ip: '172.17.1.1', netmask: '255.255.255.0', auto_config: true,
                     virtualbox__intnet: 'client'
+
+    node.vm.provision :ansible_local do |ansible|
+      ansible.compatibility_mode = '2.0'
+      ansible.playbook = '/home/vagrant/ansible/all.yml'
+      ansible.inventory_path = '/home/vagrant/ansible/inventories/router'
+      ansible.limit = 'routers'
+    end
   end
 
   # client-01
