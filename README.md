@@ -31,38 +31,38 @@
 
 ```
 vagrant@k8s-master-01:~$ kubectl get all --namespace=kube-system -o wide
-NAME                                        READY   STATUS    RESTARTS   AGE     IP            NODE            NOMINATED NODE   READINESS GATES
-pod/coredns-fb8b8dccf-qc8mt                 1/1     Running   0          18m     10.244.0.2    k8s-master-01   <none>           <none>
-pod/coredns-fb8b8dccf-stw6c                 1/1     Running   0          18m     10.244.0.3    k8s-master-01   <none>           <none>
-pod/etcd-k8s-master-01                      1/1     Running   0          19m     172.17.0.10   k8s-master-01   <none>           <none>
-pod/kube-apiserver-k8s-master-01            1/1     Running   0          19m     172.17.0.10   k8s-master-01   <none>           <none>
-pod/kube-controller-manager-k8s-master-01   1/1     Running   0          19m     172.17.0.10   k8s-master-01   <none>           <none>
-pod/kube-flannel-ds-amd64-bctmz             1/1     Running   0          6m27s   172.17.0.23   k8s-node-03     <none>           <none>
-pod/kube-flannel-ds-amd64-gt76t             1/1     Running   0          18m     172.17.0.10   k8s-master-01   <none>           <none>
-pod/kube-flannel-ds-amd64-j8rzm             1/1     Running   0          6m56s   172.17.0.22   k8s-node-02     <none>           <none>
-pod/kube-flannel-ds-amd64-mcffj             1/1     Running   0          11m     172.17.0.21   k8s-node-01     <none>           <none>
-pod/kube-proxy-5r2xx                        1/1     Running   0          18m     172.17.0.10   k8s-master-01   <none>           <none>
-pod/kube-proxy-cx9wk                        1/1     Running   0          6m27s   172.17.0.23   k8s-node-03     <none>           <none>
-pod/kube-proxy-d9j6k                        1/1     Running   0          6m56s   172.17.0.22   k8s-node-02     <none>           <none>
-pod/kube-proxy-l7mxz                        1/1     Running   0          11m     172.17.0.21   k8s-node-01     <none>           <none>
-pod/kube-scheduler-k8s-master-01            1/1     Running   0          19m     172.17.0.10   k8s-master-01   <none>           <none>
+NAME                                        READY   STATUS    RESTARTS   AGE   IP            NODE            NOMINATED NODE   READINESS GATES
+pod/coredns-fb8b8dccf-qc8mt                 1/1     Running   1          22h   10.244.0.4    k8s-master-01   <none>           <none>
+pod/coredns-fb8b8dccf-stw6c                 1/1     Running   1          22h   10.244.0.5    k8s-master-01   <none>           <none>
+pod/etcd-k8s-master-01                      1/1     Running   1          22h   172.17.0.10   k8s-master-01   <none>           <none>
+pod/kube-apiserver-k8s-master-01            1/1     Running   1          22h   172.17.0.10   k8s-master-01   <none>           <none>
+pod/kube-controller-manager-k8s-master-01   1/1     Running   1          22h   172.17.0.10   k8s-master-01   <none>           <none>
+pod/kube-flannel-ds-amd64-bctmz             1/1     Running   1          22h   172.17.0.23   k8s-node-03     <none>           <none>
+pod/kube-flannel-ds-amd64-gt76t             1/1     Running   1          22h   172.17.0.10   k8s-master-01   <none>           <none>
+pod/kube-flannel-ds-amd64-j8rzm             1/1     Running   1          22h   172.17.0.22   k8s-node-02     <none>           <none>
+pod/kube-flannel-ds-amd64-mcffj             1/1     Running   1          22h   172.17.0.21   k8s-node-01     <none>           <none>
+pod/kube-proxy-5r2xx                        1/1     Running   1          22h   172.17.0.10   k8s-master-01   <none>           <none>
+pod/kube-proxy-cx9wk                        1/1     Running   1          22h   172.17.0.23   k8s-node-03     <none>           <none>
+pod/kube-proxy-d9j6k                        1/1     Running   1          22h   172.17.0.22   k8s-node-02     <none>           <none>
+pod/kube-proxy-l7mxz                        1/1     Running   1          22h   172.17.0.21   k8s-node-01     <none>           <none>
+pod/kube-scheduler-k8s-master-01            1/1     Running   1          22h   172.17.0.10   k8s-master-01   <none>           <none>
 
 NAME               TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)                  AGE   SELECTOR
-service/kube-dns   ClusterIP   10.244.0.10   <none>        53/UDP,53/TCP,9153/TCP   19m   k8s-app=kube-dns
+service/kube-dns   ClusterIP   10.244.0.10   <none>        53/UDP,53/TCP,9153/TCP   22h   k8s-app=kube-dns
 
 NAME                                     DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR                     AGE   CONTAINERS     IMAGES                                   SELECTOR
-daemonset.apps/kube-flannel-ds-amd64     4         4         4       4            4           beta.kubernetes.io/arch=amd64     18m   kube-flannel   quay.io/coreos/flannel:v0.10.0-amd64     app=flannel,tier=node
-daemonset.apps/kube-flannel-ds-arm       0         0         0       0            0           beta.kubernetes.io/arch=arm       18m   kube-flannel   quay.io/coreos/flannel:v0.10.0-arm       app=flannel,tier=node
-daemonset.apps/kube-flannel-ds-arm64     0         0         0       0            0           beta.kubernetes.io/arch=arm64     18m   kube-flannel   quay.io/coreos/flannel:v0.10.0-arm64     app=flannel,tier=node
-daemonset.apps/kube-flannel-ds-ppc64le   0         0         0       0            0           beta.kubernetes.io/arch=ppc64le   18m   kube-flannel   quay.io/coreos/flannel:v0.10.0-ppc64le   app=flannel,tier=node
-daemonset.apps/kube-flannel-ds-s390x     0         0         0       0            0           beta.kubernetes.io/arch=s390x     18m   kube-flannel   quay.io/coreos/flannel:v0.10.0-s390x     app=flannel,tier=node
-daemonset.apps/kube-proxy                4         4         4       4            4           <none>                            19m   kube-proxy     k8s.gcr.io/kube-proxy:v1.14.3            k8s-app=kube-proxy
+daemonset.apps/kube-flannel-ds-amd64     4         4         4       4            4           beta.kubernetes.io/arch=amd64     22h   kube-flannel   quay.io/coreos/flannel:v0.10.0-amd64     app=flannel,tier=node
+daemonset.apps/kube-flannel-ds-arm       0         0         0       0            0           beta.kubernetes.io/arch=arm       22h   kube-flannel   quay.io/coreos/flannel:v0.10.0-arm       app=flannel,tier=node
+daemonset.apps/kube-flannel-ds-arm64     0         0         0       0            0           beta.kubernetes.io/arch=arm64     22h   kube-flannel   quay.io/coreos/flannel:v0.10.0-arm64     app=flannel,tier=node
+daemonset.apps/kube-flannel-ds-ppc64le   0         0         0       0            0           beta.kubernetes.io/arch=ppc64le   22h   kube-flannel   quay.io/coreos/flannel:v0.10.0-ppc64le   app=flannel,tier=node
+daemonset.apps/kube-flannel-ds-s390x     0         0         0       0            0           beta.kubernetes.io/arch=s390x     22h   kube-flannel   quay.io/coreos/flannel:v0.10.0-s390x     app=flannel,tier=node
+daemonset.apps/kube-proxy                4         4         4       4            4           <none>                            22h   kube-proxy     k8s.gcr.io/kube-proxy:v1.14.3            k8s-app=kube-proxy
 
 NAME                      READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS   IMAGES                     SELECTOR
-deployment.apps/coredns   2/2     2            2           19m   coredns      k8s.gcr.io/coredns:1.3.1   k8s-app=kube-dns
+deployment.apps/coredns   2/2     2            2           22h   coredns      k8s.gcr.io/coredns:1.3.1   k8s-app=kube-dns
 
 NAME                                DESIRED   CURRENT   READY   AGE   CONTAINERS   IMAGES                     SELECTOR
-replicaset.apps/coredns-fb8b8dccf   2         2         2       18m   coredns      k8s.gcr.io/coredns:1.3.1   k8s-app=kube-dns,pod-template-hash=fb8b8dccf
+replicaset.apps/coredns-fb8b8dccf   2         2         2       22h   coredns      k8s.gcr.io/coredns:1.3.1   k8s-app=kube-dns,pod-template-hash=fb8b8dccf
 vagrant@k8s-master-01:~$
 ```
 
@@ -85,19 +85,19 @@ vagrant@k8s-master-01:~$ kubectl apply -f shared/k8s-configs/metallb-bgp.yaml
 configmap/config created
 vagrant@k8s-master-01:~$ kubectl get all --namespace=metallb-system -o wide
 NAME                             READY   STATUS    RESTARTS   AGE   IP            NODE          NOMINATED NODE   READINESS GATES
-pod/controller-cd8657667-5nnbh   1/1     Running   0          22s   10.244.2.6    k8s-node-02   <none>           <none>
-pod/speaker-nr4mn                1/1     Running   0          22s   172.17.0.23   k8s-node-03   <none>           <none>
-pod/speaker-stj9m                1/1     Running   0          22s   172.17.0.21   k8s-node-01   <none>           <none>
-pod/speaker-xnnr2                1/1     Running   0          22s   172.17.0.22   k8s-node-02   <none>           <none>
+pod/controller-cd8657667-nj2lm   1/1     Running   1          21h   10.244.3.9    k8s-node-03   <none>           <none>
+pod/speaker-8g955                1/1     Running   1          21h   172.17.0.22   k8s-node-02   <none>           <none>
+pod/speaker-vh5x7                1/1     Running   1          21h   172.17.0.21   k8s-node-01   <none>           <none>
+pod/speaker-vtb64                1/1     Running   1          21h   172.17.0.23   k8s-node-03   <none>           <none>
 
 NAME                     DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE   CONTAINERS   IMAGES                   SELECTOR
-daemonset.apps/speaker   3         3         3       3            3           <none>          22s   speaker      metallb/speaker:v0.7.3   app=metallb,component=speaker
+daemonset.apps/speaker   3         3         3       3            3           <none>          21h   speaker      metallb/speaker:v0.7.3   app=metallb,component=speaker
 
 NAME                         READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS   IMAGES                      SELECTOR
-deployment.apps/controller   1/1     1            1           22s   controller   metallb/controller:v0.7.3   app=metallb,component=controller
+deployment.apps/controller   1/1     1            1           21h   controller   metallb/controller:v0.7.3   app=metallb,component=controller
 
 NAME                                   DESIRED   CURRENT   READY   AGE   CONTAINERS   IMAGES                      SELECTOR
-replicaset.apps/controller-cd8657667   1         1         1       22s   controller   metallb/controller:v0.7.3   app=metallb,component=controller,pod-template-hash=cd8657667
+replicaset.apps/controller-cd8657667   1         1         1       21h   controller   metallb/controller:v0.7.3   app=metallb,component=controller,pod-template-hash=cd8657667
 vagrant@k8s-master-01:~$
 ```
 
@@ -120,10 +120,8 @@ pod/nginx-deployment-6fff8bf46-c6snv   1/1     Running   0          26s   10.244
 pod/nginx-deployment-6fff8bf46-pb8sh   1/1     Running   0          26s   10.244.1.19   k8s-node-01   <none>           <none>
 
 NAME                           TYPE           CLUSTER-IP    EXTERNAL-IP   PORT(S)        AGE     SELECTOR
-service/kubernetes             ClusterIP      10.32.0.1     <none>        443/TCP        4d20h   <none>
-service/nginx                  LoadBalancer   10.32.0.51    <pending>     80:32705/TCP   26s     app=nginx
-service/nginx-cluster-ip-svc   ClusterIP      10.32.0.6     <none>        80/TCP         26s     app=nginx
-service/nginx-nodeport-svc     NodePort       10.32.0.130   <none>        80:31753/TCP   26s     app=nginx
+service/kubernetes             ClusterIP      10.244.0.1     <none>        443/TCP        4d20h   <none>
+service/nginx                  LoadBalancer   10.244.215.95  172.17.254.1  80:32705/TCP   26s     app=nginx
 
 NAME                               READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS        IMAGES           SELECTOR
 deployment.apps/bbox               1/1     1            1           24h   bbox              busybox:latest   run=bbox
@@ -134,8 +132,6 @@ replicaset.apps/bbox-64cb8dfdcf              1         1         1       24h   b
 replicaset.apps/nginx-deployment-6fff8bf46   6         6         6       26s   nginx-container   nginx:alpine     app=nginx,pod-template-hash=6fff8bf46
 vagrant@k8s-master-01:~$
 ```
-
-`service/nginx` の `EXTERNAL-IP` が `172.17.1.192` になっていたら勝ち
 
 # how to use with vagrant
 
@@ -260,37 +256,25 @@ ansible
     └── role_template # role template
 ```
 
-# join to k8s cluster
+# kubeadm で k8s クラスタに参加する
 
-- on k8s worker nodes
+マスターノード構築時に `kubeadm init` の出力を `shared/k8s-init.txt` で保存しているが、token の有効期間は 24 時間なので、だいたいは有効期限切れになっている。
 
+1. k8s マスターノードで token を発行する
 ```
-sudo $( tail -n 1 /home/vagrant/shared/k8s-init.txt )
+$ kubeadm token create --print-join-command
+-> kubeadm join コマンドが表示される
 ```
-
-or 
-
-```
-kubectl join 172.17.0.10:6443 --token <token> --discovery-token-ca-cert-hash $( tail -n 1 /home/vagrant/shared/k8s-init.txt | awk '{print $NF}' )
-```
-
-- create token at k8s master node
-```
-kubeadm token create --pront-join-command
-```
-
-- kubeadm join at k8s nodes
-
-- on k8s master nodes
-
+2. k8s クラスタに参加するノードで `kubeadm token create --print-join-command` で表示された `kubeadm join` を実行する
+3. k8s マスターノードでワーカーノードとして登録する
 ```
 kubectl label nodes <hostname> node-role.kubernetes.io/node=
 kubectl label nodes <hostname> type=worker
 ```
 
-# remove from k8s cluster
+# k8s クラスタからノードを削除する
 
-- on k8s master node
+- `kubectl` で安全にノードを削除することができる
 
 ```
 kubectl cordon <hostname>
@@ -298,10 +282,17 @@ kubectl drain <hostname> --ignore-daemonsets
 kubectl delete nodes <hostname>
 ```
 
-# rebuild k8s cluster
+# k8s クラスタを作り直す
 
+1. ワーカーノードを削除しておく
+2. `kubeadm reset` でクラスタ削除
 ```
 sudo kubeadm reset
+```
+3. 最後に iptables のルールをリセットするように言われるので、実行しておく
+4. `kubeadm init` でクラスタを作る
+```
+sudo kubeadm init --pod-network-cidr=10.244.0.0/16 --apiserver-advertise-address=172.17.0.10 --service-cidr=10.244.0.0/16
 ```
 
 ## sample
