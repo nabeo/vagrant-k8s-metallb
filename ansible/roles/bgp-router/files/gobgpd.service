@@ -1,0 +1,11 @@
+[Unit]
+Description = GoBGPd
+After = network-online.target
+
+[Service]
+ExecStart = /usr/bin/gobgpd -f /etc/gobgpd/gobgpd.toml -t toml
+Restart = always
+Type = simple
+
+[Install]
+WanterdBy=network-online.target
