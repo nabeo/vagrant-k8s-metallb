@@ -74,6 +74,6 @@
 - name: setup bash completion for kubeadm
   lineinfile:
     path: /etc/profile.d/k8s.sh
-    line: 'soruce <( kubeadm completion bash )'
+    line: 'source <( kubeadm completion bash )'
     state: present
     create: yes
