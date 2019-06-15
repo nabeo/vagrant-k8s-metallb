@@ -2,3 +2,4 @@
 - import_playbook: clients.yml
 - import_playbook: k8s-masters.yml
 - import_playbook: k8s-nodes.yml
+- import_playbook: bgp-routers.yml
