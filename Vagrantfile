@@ -13,7 +13,7 @@ Vagrant.configure(2) do |config|
       vb.gui = false
     end
     node.vm.hostname = 'rt-01'
-    node.vm.box = 'higebu/vyos'
+    node.vm.box = 'ubuntu/cosmic64'
     # eth1
     node.vm.network 'private_network',
                     ip: '172.17.0.1', netmask: '255.255.255.0', auto_config: true,
