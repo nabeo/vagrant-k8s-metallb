@@ -13,5 +13,6 @@ data:
     address-pools:
     - name: my-ip-space
       protocol: bgp
+      avoid-buggy-ips: true
       addresses:
       - 172.17.254.0/24
