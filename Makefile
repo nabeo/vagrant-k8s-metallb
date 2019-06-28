@@ -26,6 +26,7 @@ rt-01-ssh: rt.ssh.config
 .PHONY: rt-down
 rt-down:
 	vagrant halt rt-01
+	rm -f rt.ssh.config
 
 .PHONY: rt-clean
 rt-clean:
@@ -50,6 +51,7 @@ client-01-ssh: client-01.ssh.config
 .PHONY: client-down
 client-down:
 	vagrant halt client-01
+	rm -f client.ssh.config
 
 .PHONY: client-clean
 client-clean:
@@ -117,6 +119,7 @@ k8s-node-03-ssh: k8s-nodes.ssh.config
 .PHONY: k8s-nodes-down
 k8s-nodes-down:
 	vagrant halt /k8s-node/
+	rm -f k8s-nodes.ssh.config
 
 .PHONY: k8s-nodes-clean
 k8s-nodes-clean:
