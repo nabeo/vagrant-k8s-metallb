@@ -58,7 +58,7 @@
 
 - name: install k8s packages
   apt:
-    name: ['kubelet={{ k8s_version }}', 'kubeadm={{ k8s_version }}', 'kubectl={{ k8s_version }}']
+    name: ['kubelet={{ k8s_version }}-00', 'kubeadm={{ k8s_version }}-00', 'kubectl={{ k8s_version }}-00']
     state: present
     force_apt_get: yes
     update_cache: yes
