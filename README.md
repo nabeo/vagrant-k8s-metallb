@@ -323,3 +323,105 @@ to reset your system's IPVS tables.
 
 vagrant@k8s-master-01:~$
 ```
+
+# kubeadm を使って k8s クラスタのアップデート
+
+1.14 系から 1.15 系にアップデートする
+
+https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-upgrade-1-15/
+
+control plane node は master ノード、worker node は worker ノードと読み換える
+
+## master ノードをアップデートする
+
+k8s-master-01 で実行する
+
+kubeadm をアップデートする
+
+```shell
+apt-mark unhold kubeadm
+apt-get update && apt-get install -y kubeadm=1.15.1-00
+apt-mark hold kubeadm
+```
+
+
+アップデート計画を確認する
+
+```shell
+kubeadm upgrade plan
+```
+
+問題がなければ、 `kubeadm upgrade plan` の最後に表示された `kubeadm upgrade apply v1.15.X` を実行する
+
+master ノードを冗長化している場合は以下のように他の master ノードも更新する
+
+```shell
+kubeadm upgrade node
+kubeadm upgrade apply
+```
+
+CNI プラグインを更新する。
+
+以下は全ての master node で実施する
+
+kubelet パッケージと kubectl パッケージを更新する
+
+```shell
+apt-mark unhold kubelet kubectl
+apt-get update && apt-get install kubelet=1.15.1-00 kubectl=1.15.1-00
+apt-mark hold kubelet kubectl
+```
+
+kubelet を再起動させる
+
+```shell
+systemctl restart kubelet
+```
+
+## worker ノードをアップデートする
+
+各 worker ノードで以下のように rolling upgrade していく
+
+kubeadm パッケージを更新する
+
+```shell
+apt-mark unhold kubeadm
+apt-get update && apt-get install kubeadm=1.15.1-00
+apt-mark hold kubeadm
+```
+
+k8s-master-01 でアップデートする worker ノードを離脱させる
+
+```shell
+kubectl drain <node> --ignore-daemonsets
+```
+
+`kubectl drain` が完了した worker ノードは `kubectl get nodes` の `STATUS` で `NotReady,SchedulingDisabled` と表示される。また、離脱させた worker ノードで稼働していた Pod などは他の worker ノードに移っている。
+
+アップデートする worker node で以下を実行して kubelet の設定を更新する
+
+```shell
+kubeadm upgrade node
+```
+
+kubelet パッケージと kubectl パッケージを更新する
+
+```shell
+apt-mark unhold kubelet kubectl
+apt-get update && apt-get install kubelet=1.15.1-00 kubectl=1.15.1-00
+apt-mark hold kubelet kubectl
+```
+
+kubelet を再起動する。
+
+```shell
+systemctl restart kubelet
+```
+
+k8s-master-01 で以下を実行して、アップデートが完了した worker ノードを k8s クラスタに再参加させる。
+
+```shell
+kubectl uncordon <node>
+```
+
+`kubectl get nodes` で再参加した worker ノードの `STATUS` が `Ready` になっていることを確認する。
