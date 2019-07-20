@@ -1,8 +1,4 @@
 ---
-- name: register codename
-  shell: lsb_release -cs
-  register: codename
-
 - name: create docker group
   group:
     name: docker
@@ -20,7 +16,7 @@
 
 - name: install apt repository for docker-ce
   apt_repository:
-    repo: "deb https://download.docker.com/linux/ubuntu {{ codename.stdout }} stable"
+    repo: "deb https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
     filename: docker-ce
     state: present
 
