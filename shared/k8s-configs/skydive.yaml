@@ -1,0 +1,212 @@
+# https://raw.githubusercontent.com/skydive-project/skydive/master/contrib/kubernetes/skydive.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: skydive-service-account
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: skydive-default-view
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: view
+subjects:
+  - kind: ServiceAccount
+    name: skydive-service-account
+    namespace: default
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: skydive-analyzer
+  labels:
+    app: skydive-analyzer
+spec:
+  type: NodePort
+  ports:
+  - port: 8082
+    name: api
+  - port: 8082
+    name: protobuf
+    protocol: UDP
+  - port: 12379
+    name: etcd
+  - port: 12380
+    name: etcd-cluster
+  - port: 9200
+    name: es
+  selector:
+    app: skydive
+    tier: analyzer
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app: skydive-analyzer
+  name: skydive-analyzer-config
+data:
+  SKYDIVE_ANALYZER_FLOW_BACKEND: elasticsearch
+  SKYDIVE_ANALYZER_TOPOLOGY_BACKEND: elasticsearch
+  SKYDIVE_ANALYZER_TOPOLOGY_PROBES: k8s
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app: skydive-agent
+  name: skydive-agent-config
+data:
+  SKYDIVE_AGENT_TOPOLOGY_PROBES: runc docker
+  SKYDIVE_AGENT_LISTEN: 127.0.0.1:8081
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: skydive-analyzer
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: skydive
+        tier: analyzer
+    spec:
+      serviceAccountName: skydive-service-account
+      containers:
+      - name: skydive-analyzer
+        image: skydive/skydive
+        args:
+        - analyzer
+        ports:
+        - containerPort: 8082
+        - containerPort: 8082
+          protocol: UDP
+        - containerPort: 12379
+        - containerPort: 12380
+        readinessProbe:
+          httpGet:
+            port: 8082
+            path: /api/status
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            port: 8082
+            path: /api/status
+          initialDelaySeconds: 20
+          periodSeconds: 10
+          failureThreshold: 10
+        env:
+        - name: SKYDIVE_ANALYZER_LISTEN
+          value: "0.0.0.0:$(SKYDIVE_ANALYZER_SERVICE_PORT_API)"
+        - name: SKYDIVE_ETCD_LISTEN
+          value: "0.0.0.0:$(SKYDIVE_ANALYZER_SERVICE_PORT_ETCD)"
+        envFrom:
+        - configMapRef:
+            name: skydive-analyzer-config
+        livenessProbe:
+          httpGet:
+            port: 8082
+            path: /api/status
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          failureThreshold: 3
+      - name: skydive-elasticsearch
+        image: elasticsearch:5
+        args:
+        - -E
+        - "http.port=9200"
+        env:
+          - name: ES_JAVA_OPT
+            value: "-Xms256m -Xmx256m"
+        ports:
+        - containerPort: 9200
+---
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: skydive-agent
+spec:
+  template:
+    metadata:
+      labels:
+        app: skydive
+        tier: agent
+    spec:
+      hostNetwork: true
+      hostPID: true
+      containers:
+      - name: skydive-agent
+        image: skydive/skydive
+        args:
+        - agent
+        ports:
+        - containerPort: 8081
+        readinessProbe:
+          httpGet:
+            port: 8081
+            path: /api/status
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            port: 8081
+            path: /api/status
+          initialDelaySeconds: 20
+          periodSeconds: 10
+          failureThreshold: 10
+        env:
+        - name: SKYDIVE_ANALYZERS
+          value: "$(SKYDIVE_ANALYZER_SERVICE_HOST):$(SKYDIVE_ANALYZER_SERVICE_PORT_API)"
+        - name: SKYDIVE_AGENT_TOPOLOGY_RUNC_RUN_PATH
+          value: /var/run/runc /var/run/runc-ctrs /var/run/containerd/runc
+        envFrom:
+        - configMapRef:
+            name: skydive-agent-config
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: docker
+          mountPath: /var/run/docker.sock
+        - name: run
+          mountPath: /host/run
+        - name: ovsdb
+          mountPath: /var/run/openvswitch/db.sock
+        - name: runc
+          mountPath: /var/run/runc
+        - name: runc-ctrs
+          mountPath: /var/run/runc-ctrs
+        - name: containerd-runc
+          mountPath: /var/run/containerd/runc
+        - name: data-kubelet
+          mountPath: /var/data/kubelet
+        - name: lib-kubelet
+          mountPath: /var/lib/kubelet
+      volumes:
+      - name: docker
+        hostPath:
+          path: /var/run/docker.sock
+      - name: run
+        hostPath:
+          path: /var/run/netns
+      - name: ovsdb
+        hostPath:
+          path: /var/run/openvswitch/db.sock
+      - name: runc
+        hostPath:
+          path: /var/run/runc
+      - name: runc-ctrs
+        hostPath:
+          path: /var/run/runc-ctrs
+      - name: containerd-runc
+        hostPath:
+          path: /var/run/containerd/runc
+      - name: data-kubelet
+        hostPath:
+          path: /var/data/kubelet
+      - name: lib-kubelet
+        hostPath:
+          path: /var/lib/kubelet
