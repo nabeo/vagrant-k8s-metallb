@@ -45,7 +45,7 @@ client-provision: client.ssh.config
 	vagrant provision client-01
 
 .PHONY: client-01-ssh
-client-01-ssh: client-01.ssh.config
+client-01-ssh: client.ssh.config
 	ssh -F client.ssh.config client-01
 
 .PHONY: client-down
