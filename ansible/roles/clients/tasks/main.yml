@@ -1,7 +1,7 @@
 ---
 - name: install packages
   apt:
-    name: ['curl']
+    name: ['curl', 'httping']
     state: present
     update_cache: yes
     install_recommends: no
