@@ -1,0 +1,30 @@
+---
+- name: install quagga
+  apt:
+    name: ['quagga']
+    state: present
+    force_apt_get: yes
+    update_cache: yes
+    install_recommends: no
+
+- name: /etc/quagga/zebra.conf
+  copy:
+    src: zebra.conf
+    dest: /etc/quagga/zebra.conf
+    mode: 640
+    owner: quagga
+    group: quagga
+  register: update_zebra_conf
+
+- name: restart zebra.service
+  systemd:
+    name: zebra.service
+    state: restarted
+  register: zebra_restarted
+  when: update_zebra_conf is changed
+
+- name: restart gobgpd
+  systemd:
+    name: gobgpd.service
+    state: restarted
+  when: zebra_restarted.status.Restart

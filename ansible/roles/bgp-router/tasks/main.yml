@@ -6,60 +6,8 @@
     sysctl_set: yes
     sysctl_file: /etc/sysctl.d/99-router.conf
 
-- name: check gobgpd
-  stat:
-    path: /usr/bin/gobgpd
-  register: gobgpd_stat
+- name: setup gobgpd
+  include_tasks: gobgpd.yml
 
-- name: get gobgpd release
-  get_url:
-    url: https://github.com/osrg/gobgp/releases/download/v2.5.0/gobgp_2.5.0_linux_amd64.tar.gz
-    dest: /tmp/gobgpd.tar.gz
-    sha256sum: 912b28827966c175cf0adea1f8085df40a855638a1501af7eaadac0f823fefbf
-    mode: '0644'
-  when: not gobgpd_stat.stat.exists
-
-- name: unarchive /tmp/gobgpd.tar.gz to /usr/bin
-  unarchive:
-    src: /tmp/gobgpd.tar.gz
-    dest: /usr/bin
-    remote_src: yes
-  when: not gobgpd_stat.stat.exists
-
-- name: /etc/gobgpd
-  file:
-    path: /etc/gobgpd
-    mode: '0755'
-    owner: root
-    group: root
-    state: directory
-
-- name: /etc/gobgpd/gobgpd.toml
-  copy:
-    src: gobgpd.conf
-    dest: /etc/gobgpd/gobgpd.toml
-    mode: '0644'
-    owner: root
-    group: root
-  register: update_gobgpd_config_file
-
-- name: /etc/systemd/system/gobgpd.service
-  copy:
-    src: gobgpd.service
-    dest: /etc/systemd/system/gobgpd.service
-    mode: '0644'
-    owner: root
-    group: root
-  register: update_systemd_gobgpd_service
-
-- name: daemon-reload and restart gobgpd.service
-  systemd:
-    name: gobgpd.service
-    state: restarted
-    daemon_reload: yes
-  when: update_systemd_gobgpd_service is changed
-
-- name: gobgpd.service
-  systemd:
-    name: gobgpd.service
-    state: started
+- name: setup zebra
+  include_tasks: zebra.yml

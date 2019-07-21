@@ -1,6 +1,6 @@
 [Unit]
 Description = GoBGPd
-After = network-online.target
+After = network-online.target, zebra.service
 
 [Service]
 ExecStart = /usr/bin/gobgpd -f /etc/gobgpd/gobgpd.toml -t toml
