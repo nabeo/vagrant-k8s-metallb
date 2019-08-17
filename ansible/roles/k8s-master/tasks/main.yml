@@ -97,5 +97,15 @@
     group: vagrant
     mode: '0644'
 
+- name: copy /etc/kubernetes/admin.conf /home/vagrant/shared/admin.conf
+  command: cp -i /etc/kubernetes/admin.conf /home/vagrant/shared/admin.conf
+
+- name: /home/vagrant/shared/admin.conf
+  file:
+    path: /home/vagrant/shared/admin.conf
+    owner: vagrant
+    group: vagrant
+    mode: '0644'
+
 - name: deploy flannel
   command: kubectl --kubeconfig=/etc/kubernetes/admin.conf apply -f /home/vagrant/shared/k8s-configs/kube-flannel.yml
