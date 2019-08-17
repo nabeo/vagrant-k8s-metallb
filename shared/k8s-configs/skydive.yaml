@@ -42,6 +42,23 @@ spec:
     tier: analyzer
 ---
 apiVersion: v1
+kind: Service
+metadata:
+  name: skydive-analyzer-lb
+  labels:
+    app: skydive-analyzer
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 8082
+    name: api
+    protocol: TCP
+    targetPort: 8082
+  selector:
+    app: skydive
+    tier: analyzer
+---
+apiVersion: v1
 kind: ConfigMap
 metadata:
   labels:
