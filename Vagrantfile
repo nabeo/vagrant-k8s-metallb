@@ -14,11 +14,11 @@ Vagrant.configure(2) do |config|
     end
     node.vm.hostname = 'rt-01'
     node.vm.box = 'ubuntu/cosmic64'
-    # eth1
+    # enp0s8
     node.vm.network 'private_network',
                     ip: '172.17.0.1', netmask: '255.255.255.0', auto_config: true,
                     virtualbox__intnet: 'k8s-cluster'
-    # eth2
+    # enp0s9
     node.vm.network 'private_network',
                     ip: '172.17.1.1', netmask: '255.255.255.0', auto_config: true,
                     virtualbox__intnet: 'client'
