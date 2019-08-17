@@ -240,16 +240,19 @@ make k8s-nodes-clean
 ansible
 ├── all.yml         # playbook for all
 ├── clients.yml     # playbook for client
+├── bgp-routers.yml # playbook for bgp router
 ├── k8s-masters.yml # playbook for k8s-master
 ├── k8s-nodes.yml   # playbook for k8s-nodes
 |
 ├── inventories # inventory files
+│   ├── routers # inventory file for bgp router
 │   ├── clients # inventory file for client
 │   ├── masters # inventory file for k8s-master
 │   └── nodes   # inventory file for k8s-nodes
 |
 └── roles       # role direcotry
     ├── clients    # role for client
+    ├── bgp-router # role for bgp router
     ├── k8s        # role for k8s cluster
     ├── k8s-node   # role for k8s worker nodes
     ├── k8s-master # role for k8s master node
