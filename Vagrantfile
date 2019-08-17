@@ -40,6 +40,9 @@ Vagrant.configure(2) do |config|
     end
     node.vm.hostname = 'client-01'
     node.vm.box = 'ubuntu/cosmic64'
+    # port forward
+    node.vm.network 'forwarded_port', guest: 80, host: 10080
+    node.vm.network 'forwarded_port', guest: 6443, host: 6443
     # enp0s8
     node.vm.network 'private_network',
                     ip: '172.17.1.10', netmask: '255.255.255.0', auto_config: true,
