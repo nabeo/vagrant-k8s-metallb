@@ -1,0 +1,19 @@
+---
+- name: install gpg key for nginx
+  apt_key:
+    url: https://nginx.org/keys/nginx_signing.key
+
+- name: install apt repository for ubuntu
+  apt_repository:
+    repo: "deb http://nginx.org/packages/mainline/ubuntu {{ ansible_distribution_release }} nginx"
+    filename: nginx
+    state: present
+  when: nginx_release == "mainline"
+
+- name: install apt repository for ubuntu
+  apt_repository:
+    repo: "deb http://nginx.org/packages/ubuntu {{ ansible_distribution_release }} nginx"
+    filename: nginx
+    state: present
+  when: nginx_release == "stable"
+

@@ -1,0 +1,69 @@
+---
+- name: setup nginx repo for ubuntu
+  include_tasks: setup-ubuntu.yml
+  when: ansible_distribution == "Ubuntu"
+
+- name: install nginx
+  apt:
+    name: 'nginx={{ nginx_version }}-1~{{ ansible_distribution_release }}'
+    state: present
+    force_apt_get: yes
+    update_cache: yes
+    install_recommends: no
+
+- name: enable nginx.service
+  systemd:
+    name: nginx.service
+    state: started
+    enabled: yes
+
+- name: /opt/local/nginx/etc/nginx/conf.d/http
+  file:
+    path: /opt/local/nginx/etc/nginx/conf.d/http
+    state: directory
+    recurse: yes
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: /opt/local/nginx/etc/nginx/conf.d/stream
+  file:
+    path: /opt/local/nginx/etc/nginx/conf.d/stream
+    state: directory
+    recurse: yes
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: /opt/local/nginx/etc/nginx/conf.d/stream/kube-apiserver.conf
+  copy:
+    src: kube-apiserver.conf
+    dest: /opt/local/nginx/etc/nginx/conf.d/stream/kube-apiserver.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify: reload_nginx
+
+- name: /opt/local/nginx/etc/nginx/conf.d/stream/k8s-nginx.conf
+  copy:
+    src: k8s-nginx.conf
+    dest: /opt/local/nginx/etc/nginx/conf.d/stream/k8s-nginx.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify: reload_nginx
+
+- name: /etc/nginx/nginx.conf
+  copy:
+    src: nginx.conf
+    dest: /etc/nginx/nginx.conf
+    owner: root
+    group: root
+    mode: '0644'
+  register: update_etc_nginx_nginx_conf
+
+- name: reload nginx
+  systemd:
+    name: nginx.service
+    state: reloaded
+  when: update_etc_nginx_nginx_conf.changed
