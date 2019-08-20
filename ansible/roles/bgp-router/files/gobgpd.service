@@ -8,4 +8,4 @@ Restart = always
 Type = simple
 
 [Install]
-WanterdBy=network-online.target
+WantedBy=network-online.target
