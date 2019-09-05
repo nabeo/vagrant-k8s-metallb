@@ -13,7 +13,6 @@ Vagrant.configure(2) do |config|
       vb.gui = false
     end
     node.vm.hostname = 'rt-01'
-    #node.vm.box = 'ubuntu/cosmic64'
     node.vm.box = 'ubuntu/bionic64'
     # enp0s8
     node.vm.network 'private_network',
@@ -40,7 +39,6 @@ Vagrant.configure(2) do |config|
       vb.gui = false
     end
     node.vm.hostname = 'client-01'
-    #node.vm.box = 'ubuntu/cosmic64'
     node.vm.box = 'ubuntu/bionic64'
     # port forward
     node.vm.network 'forwarded_port', guest: 80, host: 10080
@@ -65,7 +63,6 @@ Vagrant.configure(2) do |config|
       vb.gui = false
     end
     node.vm.hostname = 'k8s-master-01'
-    #node.vm.box = 'ubuntu/cosmic64'
     node.vm.box = 'ubuntu/bionic64'
     # enp0s8
     node.vm.network 'private_network',
@@ -89,7 +86,6 @@ Vagrant.configure(2) do |config|
         vb.gui = false
       end
       node.vm.hostname = hostname
-      #node.vm.box = 'ubuntu/cosmic64'
       node.vm.box = 'ubuntu/bionic64'
       node.vm.network 'private_network',
                       ip: '172.17.0.%s' % ( i + 20 ), netmask: '255.255.255.0', auto_config: true,
