@@ -56,3 +56,4 @@
   systemd:
     name: gobgpd.service
     state: started
+    enabled: yes

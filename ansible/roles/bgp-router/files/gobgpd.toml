@@ -16,13 +16,22 @@
   [neighbors.config]
     neighbor-address = "172.17.0.21"
     peer-as = 64522
+  [neighbors.timers.config]
+    connect-retry = 5
+    keepalive-interval = 3
 
 [[neighbors]]
   [neighbors.config]
     neighbor-address = "172.17.0.22"
     peer-as = 64522
+  [neighbors.timers.config]
+    connect-retry = 5
+    keepalive-interval = 3
 
 [[neighbors]]
   [neighbors.config]
     neighbor-address = "172.17.0.23"
     peer-as = 64522
+  [neighbors.timers.config]
+    connect-retry = 5
+    keepalive-interval = 3

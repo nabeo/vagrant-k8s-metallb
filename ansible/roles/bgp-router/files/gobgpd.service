@@ -1,6 +1,8 @@
 [Unit]
 Description = GoBGPd
-After = network-online.target, zebra.service
+Wants = network.target
+Before = network.target
+After = network-pre.target
 
 [Service]
 ExecStart = /usr/bin/gobgpd -f /etc/gobgpd/gobgpd.toml -t toml
@@ -8,4 +10,4 @@ Restart = always
 Type = simple
 
 [Install]
-WantedBy=network-online.target
+WantedBy = multi-user.target

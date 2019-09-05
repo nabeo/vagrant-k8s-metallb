@@ -28,3 +28,9 @@
     name: gobgpd.service
     state: restarted
   when: zebra_restarted.status.Restart
+
+- name: zebra.service
+  systemd:
+    name: zebra.service
+    state: started
+    enabled: yes
