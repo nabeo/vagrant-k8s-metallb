@@ -35,3 +35,20 @@
   [neighbors.timers.config]
     connect-retry = 5
     keepalive-interval = 3
+
+[[defined-sets.prefix-sets]]
+  prefix-set-name = "ignore-prefix"
+  [[defined-sets.prefix-sets.prefix-list]]
+    ip-prefix = "10.0.2.0/24"
+
+[[policy-definitions]]
+  name = "reject-policy"
+  [[policy-definitions.statements]]
+    [policy-definitions.statements.conditions.match-prefix-set]
+      prefix-set = "ignore-prefix"
+    [policy-definitions.statements.actions]
+      route-disposition = "reject-route"
+
+[global.apply-policy.config]
+  import-policy-list = ["reject-policy"]
+  default-import-policy = "accept-route"
